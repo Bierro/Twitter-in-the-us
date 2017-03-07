@@ -9,11 +9,10 @@ var client = new Twitter({
     access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
-//
+//Library used to control the LEDs and communicate with them
 var leds = require('./LedStrip');
 
-
-//Mapping variables for Project 2
+//Mapping variables - Assign one LED to each location of the grid of the board
 var usTiles = [
   [0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1],
   [1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1],
@@ -35,10 +34,12 @@ var ledMapping =
 [0,   0,  0,  0,  0, 11, 10,  9,  6,  5,  0,  3,  0,  0,  0,  0],
 [0,   0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  1,  0,  0,  0]
 ];
+
+//Bounding box of the US in Latitude and Longitude
 var latitudeUSRange = [26.0, 49.0];
 var longitudeUSRange = [-124.0, -67.0];
-// slices the arguments passed in via the command line. args[0] is the first argument after the file name.
 
+// slices the arguments passed in via the command line. args[0] is the first argument after the file name.
 var args = process.argv.slice(2);
 
 //Get information from the parameter (3 arguments: keyword, color "r,g,b" and time LED turned on)
@@ -50,17 +51,20 @@ var ledStrip = new leds(100, args[0].split(','));
 var totalStreams =  (args.length-1)/totalArgumentsPerTweet;
 var streamers = [];
 
-//Create the different streams
+//Create the different twitter streams to watch
 for (var i = 0; i < totalStreams; i++){
+
+  //Stream creation
   var streamer = {};
   streamer.keyword = args[i*totalArgumentsPerTweet+1].split("--").join(' ');
-  console.log(streamer.keyword);
   streamer.stream = client.stream('statuses/filter', {track: streamer.keyword});
   streamer.color = args[i*totalArgumentsPerTweet+2].split(',');
   streamer.timeOn = args[i*totalArgumentsPerTweet+3];
+  //console.log(streamer.keyword);
 
   streamers[i] = streamer;
 
+  //Watch the different streams
   streamer.stream.on('data', function(tweet) {
 
       //look for which stream got fired
@@ -71,6 +75,7 @@ for (var i = 0; i < totalStreams; i++){
         }
       }
 
+      //Only consider tweets made by users
       if (tweet.user != null){
 
         //Store the parameter of the tweets for debugging purposes
@@ -112,49 +117,24 @@ for (var i = 0; i < totalStreams; i++){
 
 }
 
-// set up a stream (Single stream)
-/*var streamer = client.stream('statuses/filter', {track: args[0]});
-streamer.on('data', function(tweet) {
-    if (tweet.user != null){
-      var name = tweet.user.screen_name;
-      var text = tweet.text;
-      var date = moment(tweet.created_at, "ddd MMM DD HH:mm:ss Z YYYY");
-      if (tweet.place != null){
-        //console.log(tweet.place.country_code);
-        //console.log(tweet);
-        //console.log(usTiles);
-        //console.log(ledMapping);
-        console.log("\n Full name: "+tweet.place.full_name);
-        //for (i = 0; i < tweet.place.bounding_box.coordinates.length; i++){
-        //  console.log(tweet.place.bounding_box.coordinates[i]);
-        //}
-        //console.log(">    @" + name + " said: " + text + ", on " + date.format("YYYY-MM-DD") + " at " + date.format("h:mma"));
-        var estimateLongitude = 0.0;
-        var estimateLatitude = 0.0;
-        //console.log("Length: "+tweet.place.bounding_box.coordinates[0].length);
-        for (j = 0; j < tweet.place.bounding_box.coordinates[0].length; j++){
-          //console.log(estimateLongitude);
-          estimateLongitude += tweet.place.bounding_box.coordinates[0][j][0] / tweet.place.bounding_box.coordinates[0].length;
-          estimateLatitude += tweet.place.bounding_box.coordinates[0][j][1] / tweet.place.bounding_box.coordinates[0].length;
-        }
-        if (tweet.place.country_code == "US"){
-          console.log("Estimate longitude: "+estimateLongitude+". Estimate latitude: "+estimateLatitude);
-          console.log(closerLed(estimateLatitude, estimateLongitude));
-          ledStrip.turnOn(closerLed(estimateLatitude, estimateLongitude), args[1].split(','), 1000);
-        }
-      }
-    }
-});*/
 
-
-//
+/**
+ * Maps a location to a LED index
+ * @param {float} latitude - The estimated latitude of the tweet
+ * @param {float} longitude - The estimated longitude of the tweet
+ * @returns {int} - the index of the LED corresponding to the circle of the grid
+ * closest to where the tweet happened
+ */
 function closerLed(latitude, longitude){
+
     //Number of rows and columns in our grid
     var rows = usTiles.length;
     var cols = usTiles[0].length;
+
     //Convert the geo coordinates into our own grid coordinates
     var xTile = (longitude - longitudeUSRange[0]) * cols / (longitudeUSRange[1] - longitudeUSRange[0]);
     var yTile = (latitudeUSRange[1] - latitude) * rows / (latitudeUSRange[1] - latitudeUSRange[0]);
+
     //Make sure the coordinates are within the bounds we specified
     if (xTile < 0){
       xTile = 0;
@@ -168,9 +148,13 @@ function closerLed(latitude, longitude){
     else if (yTile >= rows) {
       yTile = rows - 0.00001;
     }
+
+    //Get the list of adjacent tiles sorted by how close they are to the tweet location
     var closeTiles = closestTiles(xTile, yTile);
+
     //console.log(closeTiles);
-    //Iterate through the closest tiles
+
+    //Iterate through this list
     for (i = 0; i < closeTiles.length; i++){
       var n = closeTiles[i][0], m = closeTiles[i][1];
       //Make sure that the tile is within the board
@@ -183,32 +167,38 @@ function closerLed(latitude, longitude){
       }
     }
 
+    //The tweet was too far from the map (e.g. Hawai, Alaska)
     return -1;
 }
+
 //Returns a list of all the adjacent tiles sorted by distance to the tweet point
 function closestTiles(x, y){
+
   //Store the coordinates of the center of the 9 tiles surrounding the tweet location
   var points = [];
   for (i = -1; i < 2; i++) {
     for (j = -1; j < 2; j++){
-      //if (i!=0 || j!=0){
-        //Center of each tile
-        var point = [Math.floor(x) + 0.5 + i, Math.floor(y) + 0.5 + j];
-        points.push(point);
-      //}
+      //Center of each tile
+      var point = [Math.floor(x) + 0.5 + i, Math.floor(y) + 0.5 + j];
+      points.push(point);
     }
   }
+
   //Sort the 9 point by their distance to the location of the tweet
   points.sort(function (a, b) {
     return distanceBetweenPoints(a, [x,y]) - distanceBetweenPoints(b, [x,y]);
   });
-  //Transform the points into their tile equivalent (as store in the array of rows and cols)
+
+  //Transform the points into their tile equivalent (as stored in the array of rows and cols)
   var tiles = [];
   for (i = 0; i < points.length; i++){
     tiles.push( [Math.floor(points[i][1]), Math.floor(points[i][0])] );
   }
+  
   return tiles;
 }
+
+
 //Return the distance between two points
 function distanceBetweenPoints(p1, p2){
   return (Math.sqrt(Math.pow(p2[0] - p1[0],2) + Math.pow(p2[1] - p1[1],2)));

@@ -1,18 +1,18 @@
 {
-  "name": "node-twitter-example",
+  "name": "twitter-in-the-us",
   "version": "1.0.0",
-  "description": "node app for learning API",
+  "description": "Display the position of geolocalized tweets in Real Time on a physical map",
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Making-Things-Interactive/node-twitter-example.git"
+    "url": "git+https://github.com/Bierro/Twitter-in-the-us.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Making-Things-Interactive/node-twitter-example/issues"
+    "url": "https://github.com/Bierro/Twitter-in-the-us/issues"
   },
-  "homepage": "https://github.com/Making-Things-Interactive/node-twitter-example#readme",
+  "homepage": "https://github.com/Bierro/Twitter-in-the-us#readme",
   "dependencies": {
     "dotenv": "^4.0.0",
     "moment": "^2.17.1",
