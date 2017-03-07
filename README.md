@@ -5,6 +5,8 @@ A physical map of the United States showing the position of geolocalized tweets 
 
 ![Night](http://i.imgur.com/WK7LFPc.jpg)
 
+[![Video](http://i.imgur.com/pKdAUP4.png)](https://www.youtube.com/watch?v=Tdg1z8DlmAM&feature=youtu.be)
+
 ## About
 
 This project was carried out by [Marc Estruch Tena](http://www.marcestruch.com) and myself as part of the CMU Graduate class "Making Things Interactive". It was made over the course of two weeks.
@@ -31,7 +33,7 @@ You can then run the code by calling:
 
 **node boardBackgroundColor Keyword1 color1 duration1 Keyword2 color2 duration2**
 
-When someone will tweet about Keyword1, the LED mapped to the location of the tweet will lightsup with color1 during duration1, before turning back to its background color.
+When someone will tweet about Keyword1, the LED mapped to the location of the tweet will light up with color1 during duration1, before turning back to its background color.
 
 Here are a few examples you could try out:
 * node ustwitter.js 50,50,50 trump 255,0,0 1000 obama 0,0,255 1000
