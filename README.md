@@ -11,7 +11,7 @@ A physical map of the United States showing the position of geolocalized tweets 
 
 This project was carried out by [Marc Estruch Tena](http://www.marcestruch.com) and myself as part of the CMU Graduate class "Making Things Interactive". It was made over the course of two weeks.
 
- This repository contains the node JS codes that we used to run our map. We uploaded it to Raspberry PI connected to a strand of 100 LEDs positioned at the back of our installation. Detailed instructions about how to realize our project step by step can be found on [this Instructables post](#).
+ This repository contains the node JS codes that we used to run our map. We uploaded it to Raspberry PI connected to a strand of 100 LEDs positioned at the back of our installation. Detailed instructions about how to realize our project step by step can be found on [this Instructables post](https://www.instructables.com/id/Twitter-in-the-US/).
 
 ## Code Structure
 
