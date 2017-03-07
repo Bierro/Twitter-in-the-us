@@ -1,0 +1,21 @@
+{
+  "name": "node-twitter-example",
+  "version": "1.0.0",
+  "description": "node app for learning API",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Making-Things-Interactive/node-twitter-example.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Making-Things-Interactive/node-twitter-example/issues"
+  },
+  "homepage": "https://github.com/Making-Things-Interactive/node-twitter-example#readme",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "moment": "^2.17.1",
+    "twitter": "^1.7.0
+  }
+}
