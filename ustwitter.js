@@ -1,15 +1,18 @@
-//Twitter variabmls
+//Twitter variables
 var Twitter = require('twitter'); // for the Twitter API
 var env = require('dotenv').config(); // for loading API credentials
 var moment = require('moment'); // for displaying dates nicely
-var leds = require('./LedStrip');
-
 var client = new Twitter({
     consumer_key: process.env.TWITTER_CONSUMER_KEY,
     consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
     access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
     access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
+
+//
+var leds = require('./LedStrip');
+
+
 //Mapping variables for Project 2
 var usTiles = [
   [0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1],
@@ -69,31 +72,38 @@ for (var i = 0; i < totalStreams; i++){
       }
 
       if (tweet.user != null){
+
+        //Store the parameter of the tweets for debugging purposes
         var name = tweet.user.screen_name;
         var text = tweet.text;
         var date = moment(tweet.created_at, "ddd MMM DD HH:mm:ss Z YYYY");
+
+        //Display the information about the tweet which just occured
+        //console.log(">    @" + name + " said: " + text + ", on " + date.format("YYYY-MM-DD") + " at " + date.format("h:mma"));
+
+        //Only consider the geolocalized tweets
         if (tweet.place != null){
-          //console.log(tweet.place.country_code);
-          //console.log(tweet);
-          //console.log(usTiles);
-          //console.log(ledMapping);
-          console.log("\n Full name: "+tweet.place.full_name);
-          //for (i = 0; i < tweet.place.bounding_box.coordinates.length; i++){
-          //  console.log(tweet.place.bounding_box.coordinates[i]);
-          //}
-          //console.log(">    @" + name + " said: " + text + ", on " + date.format("YYYY-MM-DD") + " at " + date.format("h:mma"));
-          var estimateLongitude = 0.0;
-          var estimateLatitude = 0.0;
-          //console.log("Length: "+tweet.place.bounding_box.coordinates[0].length);
-          for (j = 0; j < tweet.place.bounding_box.coordinates[0].length; j++){
-            //console.log(estimateLongitude);
-            estimateLongitude += tweet.place.bounding_box.coordinates[0][j][0] / tweet.place.bounding_box.coordinates[0].length;
-            estimateLatitude += tweet.place.bounding_box.coordinates[0][j][1] / tweet.place.bounding_box.coordinates[0].length;
-          }
+
+          //Print the location of the tweet
+          console.log("\nTweet location: "+tweet.place.full_name);
+
+          //Only consider tweets happening in the US
           if (tweet.place.country_code == "US"){
-            console.log("Estimate longitude: "+estimateLongitude+". Estimate latitude: "+estimateLatitude);
-            console.log(closerLed(estimateLatitude, estimateLongitude));
-            console.log("Stream number: "+whichStream+" with keyword "+streamers[whichStream].keyword+" and text "+text);
+
+            //Compute the estimate latitude and longitude of the tweet as the center of the bounding box where it got localized
+            var estimateLongitude = 0.0;
+            var estimateLatitude = 0.0;
+            for (j = 0; j < tweet.place.bounding_box.coordinates[0].length; j++){
+              estimateLongitude += tweet.place.bounding_box.coordinates[0][j][0] / tweet.place.bounding_box.coordinates[0].length;
+              estimateLatitude += tweet.place.bounding_box.coordinates[0][j][1] / tweet.place.bounding_box.coordinates[0].length;
+            }
+
+            //Display information in the console
+            //console.log("Estimate longitude: "+estimateLongitude+". Estimate latitude: "+estimateLatitude);
+            //console.log(closerLed(estimateLatitude, estimateLongitude));
+            //console.log("Stream number: "+whichStream+" with keyword "+streamers[whichStream].keyword+" and text "+text);
+
+            //Turn on the LEDs
             ledStrip.turnOn(closerLed(estimateLatitude, estimateLongitude), streamers[whichStream].color, streamers[whichStream].timeOn);
           }
         }
@@ -136,6 +146,8 @@ streamer.on('data', function(tweet) {
     }
 });*/
 
+
+//
 function closerLed(latitude, longitude){
     //Number of rows and columns in our grid
     var rows = usTiles.length;
