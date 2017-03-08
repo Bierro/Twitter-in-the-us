@@ -42,6 +42,6 @@ Here are a few examples you could try out:
 
 ## Credits
 
-The backbone of the code used to get twitter posts was derived from our instructors' code example save [here](https://github.com/Making-Things-Interactive/node-twitter-example#readme).
+The backbone of the code used to get twitter posts was derived from our instructors' code example saved [here](https://github.com/Making-Things-Interactive/node-twitter-example#readme).
 
 Documentation for the API we used to control and communicate with the LED strands through Raspberry Pi can be found [here](https://www.npmjs.com/package/rpi-ws2801).
