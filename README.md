@@ -5,7 +5,7 @@ A physical map of the United States showing the position of geolocalized tweets 
 
 ![Night](http://i.imgur.com/WK7LFPc.jpg)
 
-[![Video](http://i.imgur.com/pKdAUP4.png)](https://www.youtube.com/watch?v=Tdg1z8DlmAM&feature=youtu.be)
+[![Video](http://i.imgur.com/uXiHkxU.png)](https://www.youtube.com/watch?v=Tdg1z8DlmAM&feature=youtu.be)
 
 ## About
 
