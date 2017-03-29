@@ -40,6 +40,7 @@ Here are a few examples you could try out:
 * node ustwitter.js 100,100,100 love 255,130,47 2000 hate 178,74,255 2000
 * node ustwitter.js 100,100,100 tea 187,255,0 1000 coffee 255,255,179 1000
 
+
 ## Credits
 
 The backbone of the code used to get twitter posts was derived from our instructors' code example saved [here](https://github.com/Making-Things-Interactive/node-twitter-example#readme).
