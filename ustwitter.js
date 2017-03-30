@@ -90,7 +90,7 @@ for (var i = 0; i < totalStreams; i++){
         if (tweet.place != null){
 
           //Print the location of the tweet
-          console.log("\nTweet location: "+tweet.place.full_name);
+          //CHANGEconsole.log("\nTweet location: "+tweet.place.full_name);
 
           //Only consider tweets happening in the US
           if (tweet.place.country_code == "US"){
@@ -194,7 +194,7 @@ function closestTiles(x, y){
   for (i = 0; i < points.length; i++){
     tiles.push( [Math.floor(points[i][1]), Math.floor(points[i][0])] );
   }
-  
+
   return tiles;
 }
 

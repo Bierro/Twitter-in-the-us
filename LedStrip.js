@@ -42,14 +42,14 @@ LedStrip.prototype.turnOn = function(index, rgb, totalTimeOn = 500, incrementCol
   //Check index is in our total LEDs
   if(index >= 0 && index < this.totalLed){
     //Log information in the screen
-    console.log("Turning on led at "+index+" with color "+rgb+" during "+totalTimeOn+" milliseconds");
+    //CHANGEconsole.log("Turning on led at "+index+" with color "+rgb+" during "+totalTimeOn+" milliseconds");
     //Set color and time to be on to the led
     this.ledArray[index].color = Color.rgb([parseInt(rgb[0]),parseInt(rgb[1]),parseInt(rgb[2])]);
-    console.log(this.ledArray[index].color.rgb().array());
+    //CHANGEconsole.log(this.ledArray[index].color.rgb().array());
     this.ledArray[index].bgColor = this.ledArray[index].color.mix(this.ledArray[index].bgColor,incrementColor);
     this.ledArray[index].timeLeftOn = totalTimeOn;
   }else{
-    console.log("Index "+index+" out of bounds. Max is: "+this.totalLed);
+    //CHANGEconsole.log("Index "+index+" out of bounds. Max is: "+this.totalLed);
   }
 };
 //Function that return an array with the LED information initialized
